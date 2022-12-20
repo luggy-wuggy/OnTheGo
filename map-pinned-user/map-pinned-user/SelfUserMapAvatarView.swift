@@ -66,7 +66,7 @@ class SelfUserAnnotationView: MKAnnotationView, CLLocationManagerDelegate {
 
 
         UIView.animate(withDuration: 0.48, delay: 0, options: [.repeat, .autoreverse], animations: {
-            self.squircleBubble.transform = self.squircleBubble.transform.scaledBy(x: 1.06, y: 1.13)
+            self.squircleBubble.transform = self.squircleBubble.transform.scaledBy(x: 1.06, y: 1.16)
         }, completion: nil)
 
 

@@ -9,12 +9,25 @@ import UIKit
 import MapKit
 
 class MapVC: UIViewController {
-
+    let bounds = UIScreen.main.bounds
     let mapView = MKMapView()
     let locationManager = CLLocationManager()
     var userCoordinate: CLLocationCoordinate2D?
     var userCGPoint: CGPoint?
     let userPin  = MKPointAnnotation()
+
+    var avatarBounds =  AvatarBounds.inBounds {
+        didSet{
+            switch avatarBounds{
+            case  .inBounds:
+                print("INBOUNDS")
+            case  .leftSide:
+                print("LEFTSIDE")
+            case .rightSide:
+                print("RIGHTSIDE")
+            }
+        }
+    }
     //let selfUserMapAvatar = SelfUserMapAvatarView()
 
 
@@ -24,27 +37,16 @@ class MapVC: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        configureLocationManager()
+        renderPinnedUser()
 
     }
 
-    func renderPinnedUser(_ location: CLLocation) {
-
-        self.userCoordinate = CLLocationCoordinate2D(
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
-        )
-
-        if let coordinate = self.userCoordinate {
+    func renderPinnedUser() {
+        if let userCoordinate = mapView.userLocation.location?.coordinate {
             let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-            let region = MKCoordinateRegion(center: coordinate, span: span)
+            let region = MKCoordinateRegion(center: userCoordinate, span: span)
             mapView.setRegion(region, animated: true)
-
-
-            self.userPin.coordinate = coordinate
-            mapView.addAnnotation(self.userPin)
         }
-
     }
 
 }
@@ -57,6 +59,7 @@ extension MapVC: MKMapViewDelegate {
         mapView.delegate = self
         mapView.overrideUserInterfaceStyle = .dark
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.showsUserLocation = true
 
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -66,14 +69,26 @@ extension MapVC: MKMapViewDelegate {
         ])
     }
 
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        let userCGPoint = mapView.convert(mapView.userLocation.coordinate, toPointTo: mapView)
+        if userCGPoint.x <= 0 {
+            if avatarBounds != .leftSide { avatarBounds = .leftSide }
+        } else if userCGPoint.x >= bounds.size.width{
+            if avatarBounds != .rightSide { avatarBounds = .rightSide }
+        } else {
+            if avatarBounds != .inBounds { avatarBounds = .inBounds }
+        }
 
-        guard annotation is MKPointAnnotation else { return nil }
-        let selfUserAnnotation = self.selfUserAnnotationView(
-            in: mapView, for: annotation
-        )
-        return selfUserAnnotation
     }
+
+
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation.isEqual(mapView.userLocation){
+            return self.selfUserAnnotationView(in: mapView, for: annotation)
+        }
+        return nil
+    }
+
 
     private func selfUserAnnotationView(in mapView: MKMapView, for annotation: MKAnnotation) -> SelfUserAnnotationView {
         let identifier = "\(SelfUserAnnotationView.self)"
@@ -82,29 +97,17 @@ extension MapVC: MKMapViewDelegate {
             annotationView.annotation = annotation
             return annotationView
         } else {
-            let customAnnotationView = SelfUserAnnotationView(
+            let selfUserAnnotation = SelfUserAnnotationView(
                 annotation: annotation, reuseIdentifier: identifier
             )
-            customAnnotationView.canShowCallout = true
-            return customAnnotationView
+            selfUserAnnotation.canShowCallout = true
+            return selfUserAnnotation
         }
     }
 }
 
-extension MapVC: CLLocationManagerDelegate {
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first{
-            manager.stopUpdatingLocation()
-            renderPinnedUser(location)
-        }
-    }
-
-    func configureLocationManager() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-    }
-
+enum AvatarBounds {
+    case leftSide
+    case rightSide
+    case inBounds
 }
