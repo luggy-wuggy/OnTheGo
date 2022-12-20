@@ -36,7 +36,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
         UIView.animate(withDuration: 0.48, delay: 0, options: [.repeat, .autoreverse], animations: {
             self.avatarView.transform = self.avatarView.transform.scaledBy(x: 1.06, y: 1.13)
-            self.pulsingView.transform = self.pulsingView.transform.scaledBy(x: 1.06, y: 1.13)
             self.view.layoutIfNeeded()
         }, completion: nil)
 
@@ -177,8 +176,6 @@ class AvatarView: UIView{
         path.addRoundedRect(in: bounds, cornerWidth: 15, cornerHeight: 15)
         shape.path = path
     }
-
-
 
 }
 

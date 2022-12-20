@@ -19,7 +19,32 @@ class ViewController: UIViewController{
     var userTopAnchorConstraints: NSLayoutConstraint!
     var userLeadingAnchorConstraints: NSLayoutConstraint!
     var userTrailingAnchorConstraints: NSLayoutConstraint!
+    var userHeightAnchorConstraints: NSLayoutConstraint!
+    var userWidthAnchorConstraints: NSLayoutConstraint!
     let pinnedUserView = PinnedUserView()
+    var isUserPinned = false {
+        didSet{
+            print("isUserOutBounds: \(isUserPinned)")
+            if isUserPinned {
+                UIView.animate(withDuration: 0.4, animations: {
+                    self.pinnedUserView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+                    self.pinnedUserView.alpha = 1
+                })
+                } else{
+
+                    UIView.animate(withDuration: 0.4, animations: {
+                        self.pinnedUserView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                        self.pinnedUserView.alpha = 0
+                    })
+
+                }
+        }
+
+        willSet{
+
+        }
+
+    }
 
 
     override func viewDidLoad() {
@@ -31,15 +56,20 @@ class ViewController: UIViewController{
 
     func configurePinnedUserView() {
         view.addSubview(pinnedUserView)
+        pinnedUserView.alpha = 0
         pinnedUserView.translatesAutoresizingMaskIntoConstraints = false
 
         userTopAnchorConstraints = pinnedUserView.topAnchor.constraint(equalTo: view.topAnchor)
-        userTrailingAnchorConstraints = pinnedUserView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-        userLeadingAnchorConstraints = pinnedUserView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+        userTrailingAnchorConstraints = pinnedUserView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
+        userLeadingAnchorConstraints = pinnedUserView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0)
+
+        userHeightAnchorConstraints = pinnedUserView.heightAnchor.constraint(equalToConstant: 35)
+
+        userWidthAnchorConstraints = pinnedUserView.widthAnchor.constraint(equalToConstant: 35)
 
         NSLayoutConstraint.activate([
-            pinnedUserView.heightAnchor.constraint(equalToConstant: 35),
-            pinnedUserView.widthAnchor.constraint(equalToConstant: 35),
+            userHeightAnchorConstraints,
+            userWidthAnchorConstraints,
             userTrailingAnchorConstraints,
             userTopAnchorConstraints,
         ])
@@ -111,28 +141,35 @@ extension ViewController: MKMapViewDelegate{
         self.userCGPoint = mapView.convert(self.userCoordinate!, toPointTo: self.view)
         print(self.userCGPoint ?? "nil")
 
+        userTopAnchorConstraints.isActive = true
+        userTopAnchorConstraints.constant = self.userCGPoint!.y - 35
+
 
         if((self.userCGPoint!.x) >= bounds.size.width){
-            pinnedUserView.isHidden = false
-            userTopAnchorConstraints.constant = self.userCGPoint!.y
-
+            if (isUserPinned != true){
+                isUserPinned = true
+            }
             userLeadingAnchorConstraints.isActive = false
             userTrailingAnchorConstraints.isActive = true
 
             view.setNeedsLayout()
             view.layoutIfNeeded()
         } else if(self.userCGPoint!.x <= 0) {
-            pinnedUserView.isHidden = false
-            userTopAnchorConstraints.constant = self.userCGPoint!.y
-
-
+            if (isUserPinned != true){
+                isUserPinned = true
+            }
             userTrailingAnchorConstraints.isActive = false
             userLeadingAnchorConstraints.isActive = true
 
             view.setNeedsLayout()
             view.layoutIfNeeded()
         } else{
-            pinnedUserView.isHidden = true
+            if (isUserPinned != false){
+                isUserPinned = false
+            }
+
+            userLeadingAnchorConstraints.constant = self.userCGPoint!.x
+            userLeadingAnchorConstraints.isActive = true
         }
 
 
