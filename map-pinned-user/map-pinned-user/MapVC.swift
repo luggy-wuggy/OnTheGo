@@ -22,9 +22,9 @@ class MapVC: UIViewController {
             case  .inBounds:
                 print("INBOUNDS")
             case  .leftSide:
-                print("LEFTSIDE")
+                print("LEFT SIDE")
             case .rightSide:
-                print("RIGHTSIDE")
+                print("RIGHT SIDE")
             }
         }
     }
@@ -71,20 +71,52 @@ extension MapVC: MKMapViewDelegate {
 
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
         let userCGPoint = mapView.convert(mapView.userLocation.coordinate, toPointTo: mapView)
+        let userView = mapView.view(for: mapView.userLocation)
+
         if userCGPoint.x <= 0 {
-            if avatarBounds != .leftSide { avatarBounds = .leftSide }
+            if avatarBounds != .leftSide {
+                avatarBounds = .leftSide
+                UIView.animate(withDuration: 0.3, animations: {
+                    userView?.alpha = 0
+                })
+            }
+
         } else if userCGPoint.x >= bounds.size.width{
-            if avatarBounds != .rightSide { avatarBounds = .rightSide }
+            if avatarBounds != .rightSide {
+                avatarBounds = .rightSide
+                UIView.animate(withDuration: 0.3, animations: {
+                    userView?.alpha = 0
+                })
+            }
         } else {
-            if avatarBounds != .inBounds { avatarBounds = .inBounds }
+            if avatarBounds != .inBounds {
+                avatarBounds = .inBounds
+                UIView.animate(withDuration: 0.3, animations: {
+                    userView?.alpha = 1
+                })
+            }
         }
 
     }
 
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+
+
         if annotation.isEqual(mapView.userLocation){
-            return self.selfUserAnnotationView(in: mapView, for: annotation)
+            let userAnnotationView = self.selfUserAnnotationView(in: mapView, for: annotation)
+            if avatarBounds == .inBounds{
+                UIView.animate(withDuration: 0.5, animations: {
+                    userAnnotationView.alpha = 0
+                    self.view.setNeedsLayout()
+                    self.view.layoutIfNeeded()
+                })
+
+            }else{
+                userAnnotationView.alpha = 1
+            }
+
+            return userAnnotationView
         }
         return nil
     }
