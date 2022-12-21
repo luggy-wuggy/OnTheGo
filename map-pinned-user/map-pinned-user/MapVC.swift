@@ -96,12 +96,16 @@ extension MapVC: MKMapViewDelegate {
                 pinnedAvatarLeadingAnchor.isActive = true
                 pinnedAvatarTrailingAnchor.isActive = false
 
-                UIView.animate(withDuration: 0.2, animations: {
-                    userView?.alpha = 0
+                UIView.animateKeyframes(withDuration: 0.32, delay: 0, animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
+                        self.pinnedAvatar.alpha = 1
+
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0.05, relativeDuration: 0.22, animations: {
+                        userView?.alpha = 0
+                    })
                 })
-                UIView.animate(withDuration: 0.12, animations: {
-                    self.pinnedAvatar.alpha = 1
-                })
+
             }
         } else if userCGPoint.x >= bounds.size.width{
             if avatarBounds != .rightSide {
@@ -109,21 +113,27 @@ extension MapVC: MKMapViewDelegate {
                 pinnedAvatarTrailingAnchor.isActive = true
                 pinnedAvatarLeadingAnchor.isActive = false
 
-                UIView.animate(withDuration: 0.2, animations: {
-                    userView?.alpha = 0
-                })
-                UIView.animate(withDuration: 0.12, animations: {
-                    self.pinnedAvatar.alpha = 1
+                UIView.animateKeyframes(withDuration: 0.32, delay: 0, animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
+                        self.pinnedAvatar.alpha = 1
+
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0.05, relativeDuration: 0.22, animations: {
+                        userView?.alpha = 0
+                    })
                 })
             }
         } else {
             if avatarBounds != .inBounds {
                 avatarBounds = .inBounds
-                UIView.animate(withDuration: 0.2, animations: {
-                    userView?.alpha = 1
-                })
-                UIView.animate(withDuration: 0.12, animations: {
-                    self.pinnedAvatar.alpha = 0
+                UIView.animateKeyframes(withDuration: 0.22, delay: 0, animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.2, animations: {
+                        userView?.alpha = 1
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.12, animations: {
+                        self.pinnedAvatar.alpha = 0
+
+                    })
                 })
             }
         }
