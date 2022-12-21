@@ -14,6 +14,7 @@
 		D57030AB2950E5F400000D3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D57030A92950E5F400000D3D /* LaunchScreen.storyboard */; };
 		D57030B72950F1AC00000D3D /* SelfUserMapAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57030B62950F1AC00000D3D /* SelfUserMapAvatarView.swift */; };
 		D57030B92951109100000D3D /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57030B82951109100000D3D /* UIView+Extension.swift */; };
+		D57030BB29526BD800000D3D /* PinnedUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57030BA29526BD800000D3D /* PinnedUserView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		D57030AC2950E5F400000D3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D57030B62950F1AC00000D3D /* SelfUserMapAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfUserMapAvatarView.swift; sourceTree = "<group>"; };
 		D57030B82951109100000D3D /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		D57030BA29526BD800000D3D /* PinnedUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedUserView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				D57030A02950E5F200000D3D /* SceneDelegate.swift */,
 				D57030A22950E5F200000D3D /* MapVC.swift */,
 				D57030B62950F1AC00000D3D /* SelfUserMapAvatarView.swift */,
+				D57030BA29526BD800000D3D /* PinnedUserView.swift */,
 				D57030B82951109100000D3D /* UIView+Extension.swift */,
 				D57030A72950E5F400000D3D /* Assets.xcassets */,
 				D57030A92950E5F400000D3D /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D57030A32950E5F200000D3D /* MapVC.swift in Sources */,
+				D57030BB29526BD800000D3D /* PinnedUserView.swift in Sources */,
 				D570309F2950E5F200000D3D /* AppDelegate.swift in Sources */,
 				D57030A12950E5F200000D3D /* SceneDelegate.swift in Sources */,
 				D57030B92951109100000D3D /* UIView+Extension.swift in Sources */,

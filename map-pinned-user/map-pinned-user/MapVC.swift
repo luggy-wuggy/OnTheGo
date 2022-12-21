@@ -11,10 +11,10 @@ import MapKit
 class MapVC: UIViewController {
     let bounds = UIScreen.main.bounds
     let mapView = MKMapView()
-    let locationManager = CLLocationManager()
-    var userCoordinate: CLLocationCoordinate2D?
-    var userCGPoint: CGPoint?
-    let userPin  = MKPointAnnotation()
+    let pinnedAvatar  = PinnedUserView()
+    var pinnedAvatarTopAnchor: NSLayoutConstraint!
+    var pinnedAvatarLeadingAnchor: NSLayoutConstraint!
+    var pinnedAvatarTrailingAnchor: NSLayoutConstraint!
 
     var avatarBounds =  AvatarBounds.inBounds {
         didSet{
@@ -34,14 +34,28 @@ class MapVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureMapView()
+        configurePinnedAvatar()
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        renderPinnedUser()
+        zoomIntoUser()
+    }
+
+    func configurePinnedAvatar() {
+        view.addSubview(pinnedAvatar)
+        pinnedAvatar.alpha = 0
+        pinnedAvatar.translatesAutoresizingMaskIntoConstraints = false
+
+        pinnedAvatarTopAnchor = pinnedAvatar.topAnchor.constraint(equalTo: view.topAnchor)
+        pinnedAvatarLeadingAnchor = pinnedAvatar.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        pinnedAvatarTrailingAnchor = pinnedAvatar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+
+        pinnedAvatarTopAnchor.isActive = true
+        pinnedAvatarLeadingAnchor.isActive = true
 
     }
 
-    func renderPinnedUser() {
+    func zoomIntoUser() {
         if let userCoordinate = mapView.userLocation.location?.coordinate {
             let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
             let region = MKCoordinateRegion(center: userCoordinate, span: span)
@@ -73,26 +87,43 @@ extension MapVC: MKMapViewDelegate {
         let userCGPoint = mapView.convert(mapView.userLocation.coordinate, toPointTo: mapView)
         let userView = mapView.view(for: mapView.userLocation)
 
+        pinnedAvatarTopAnchor.isActive = true
+        pinnedAvatarTopAnchor.constant = userCGPoint.y
+
         if userCGPoint.x <= 0 {
             if avatarBounds != .leftSide {
                 avatarBounds = .leftSide
-                UIView.animate(withDuration: 0.3, animations: {
+                pinnedAvatarLeadingAnchor.isActive = true
+                pinnedAvatarTrailingAnchor.isActive = false
+
+                UIView.animate(withDuration: 0.2, animations: {
                     userView?.alpha = 0
                 })
+                UIView.animate(withDuration: 0.12, animations: {
+                    self.pinnedAvatar.alpha = 1
+                })
             }
-
         } else if userCGPoint.x >= bounds.size.width{
             if avatarBounds != .rightSide {
                 avatarBounds = .rightSide
-                UIView.animate(withDuration: 0.3, animations: {
+                pinnedAvatarTrailingAnchor.isActive = true
+                pinnedAvatarLeadingAnchor.isActive = false
+
+                UIView.animate(withDuration: 0.2, animations: {
                     userView?.alpha = 0
+                })
+                UIView.animate(withDuration: 0.12, animations: {
+                    self.pinnedAvatar.alpha = 1
                 })
             }
         } else {
             if avatarBounds != .inBounds {
                 avatarBounds = .inBounds
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.2, animations: {
                     userView?.alpha = 1
+                })
+                UIView.animate(withDuration: 0.12, animations: {
+                    self.pinnedAvatar.alpha = 0
                 })
             }
         }

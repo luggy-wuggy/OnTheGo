@@ -18,7 +18,7 @@ class SelfUserAnnotationView: MKAnnotationView, CLLocationManagerDelegate {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         configurePulsingView()
         configureSquircleBubble()
-        configureRadarCone()
+        //configureRadarCone()
         configureLocationManager()
 
     }
