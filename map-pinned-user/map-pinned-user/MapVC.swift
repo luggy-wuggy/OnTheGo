@@ -50,9 +50,6 @@ class MapVC: UIViewController {
         pinnedAvatarLeadingAnchor = pinnedAvatar.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         pinnedAvatarTrailingAnchor = pinnedAvatar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
 
-        pinnedAvatarTopAnchor.isActive = true
-        pinnedAvatarLeadingAnchor.isActive = true
-
     }
 
     func zoomIntoUser() {
@@ -93,16 +90,23 @@ extension MapVC: MKMapViewDelegate {
         if userCGPoint.x <= 0 {
             if avatarBounds != .leftSide {
                 avatarBounds = .leftSide
+                pinnedAvatarLeadingAnchor.constant = 30
+                pinnedAvatarTopAnchor.constant += 15
                 pinnedAvatarLeadingAnchor.isActive = true
                 pinnedAvatarTrailingAnchor.isActive = false
 
-                UIView.animateKeyframes(withDuration: 0.32, delay: 0, animations: {
+                UIView.animateKeyframes(withDuration: 0.47, delay: 0, animations: {
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
                         self.pinnedAvatar.alpha = 1
 
                     })
                     UIView.addKeyframe(withRelativeStartTime: 0.05, relativeDuration: 0.22, animations: {
                         userView?.alpha = 0
+                    })
+
+                    UIView.addKeyframe(withRelativeStartTime: 0.13, relativeDuration: 0.15, animations: {
+                        self.pinnedAvatar.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                        self.view.layoutIfNeeded()
                     })
                 })
 
@@ -125,15 +129,21 @@ extension MapVC: MKMapViewDelegate {
             }
         } else {
             if avatarBounds != .inBounds {
+                pinnedAvatarTopAnchor.constant -= 15
                 avatarBounds = .inBounds
-                UIView.animateKeyframes(withDuration: 0.22, delay: 0, animations: {
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.2, animations: {
+                pinnedAvatarLeadingAnchor.constant = -20
+                UIView.animateKeyframes(withDuration: 0.47, delay: 0, options: [.calculationModeCubicPaced], animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0.22, relativeDuration: 0.2, animations: {
                         userView?.alpha = 1
                     })
-                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.12, animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.88, animations: {
+                        self.pinnedAvatar.transform = CGAffineTransform(scaleX: 1, y: 1)
                         self.pinnedAvatar.alpha = 0
 
                     })
+//                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.12, animations: {
+//                        self.view.layoutIfNeeded()
+//                    })
                 })
             }
         }

@@ -1,0 +1,6 @@
+framework module Pods_MessengerSnapchatIntegration {
+  umbrella header "Pods-MessengerSnapchatIntegration-umbrella.h"
+
+  export *
+  module * { export * }
+}

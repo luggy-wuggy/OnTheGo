@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-MessengerSnapchatIntegration/Pods-MessengerSnapchatIntegration-frameworks.sh
+${PODS_XCFRAMEWORKS_BUILD_DIR}/SnapSDK/SCSDKCoreKit/SCSDKCoreKit.framework/SCSDKCoreKit
+${PODS_XCFRAMEWORKS_BUILD_DIR}/SnapSDK/SCSDKCreativeKit/SCSDKCreativeKit.framework/SCSDKCreativeKit
+${PODS_XCFRAMEWORKS_BUILD_DIR}/SnapSDK/SCSDKLoginKit/SCSDKLoginKit.framework/SCSDKLoginKit
